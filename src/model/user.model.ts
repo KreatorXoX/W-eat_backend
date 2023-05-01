@@ -6,7 +6,20 @@ import { DocumentType } from "@typegoose/typegoose/lib/types";
 import bcrypt from "bcrypt";
 
 import { Order } from "./order.model";
-import { Address } from "./address.model";
+
+export class Address {
+  @prop({ required: true })
+  street!: string;
+
+  @prop({ required: true })
+  city!: string;
+
+  @prop({ required: true })
+  houseNumber!: string;
+
+  @prop({ required: true })
+  postalCode!: string;
+}
 
 @pre<User>("save", async function () {
   if (!this.isModified("password")) return;
