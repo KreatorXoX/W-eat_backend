@@ -4,7 +4,7 @@ import HttpError from "../model/http-error";
 
 import { findAllUsers, findUserByIdForClient } from "../service/user.service";
 
-import { FindUserByIdInpupt } from "../schema/user.schema";
+import { FindUserByIdInput } from "../schema/user.schema";
 
 export async function findAllUsersHandler(
   req: Request<{}, {}, {}>,
@@ -21,13 +21,13 @@ export async function findAllUsersHandler(
 }
 
 export async function findUserByIdForClientHandler(
-  req: Request<FindUserByIdInpupt, {}, {}>,
+  req: Request<FindUserByIdInput, {}, {}>,
   res: Response,
   next: NextFunction
 ) {
   const { id } = req.params;
 
-  const user = await findUserByIdForClient(id);
+  const user = await findUserByIdForClient(id!);
 
   if (!user) {
     return next(new HttpError("User not found", 404));

@@ -14,7 +14,12 @@ const validateSchema =
       });
       next();
     } catch (error: any) {
-      return next(new HttpError("Schema Validation Error", 409));
+      const message = error.issues
+        .map((err: any) => `${err.message} - path: ${err.path.join(",")}`)
+        .join(" \n ");
+
+      console.log(message);
+      return next(new HttpError(message, 409));
     }
   };
 

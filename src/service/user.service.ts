@@ -1,4 +1,4 @@
-import { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
+import mongoose, { FilterQuery, QueryOptions, UpdateQuery } from "mongoose";
 import { DocumentType } from "@typegoose/typegoose";
 
 import { User } from "../model/user.model";
@@ -8,7 +8,7 @@ import { UserModel } from "../model";
 export function findAllUsers() {
   return UserModel.find().select("_id firstName lastName").lean().exec();
 }
-export function findUserByIdForClient(id: string) {
+export function findUserByIdForClient(id: mongoose.Types.ObjectId) {
   return UserModel.findById(id).select("_id firstName lastName").lean().exec();
 }
 

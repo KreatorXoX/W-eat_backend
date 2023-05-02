@@ -1,8 +1,8 @@
 import mongoose, { isValidObjectId } from "mongoose";
 import { z } from "zod";
 
-// finding user by the provided id schema
-export const findUserByIdSchema = z.object({
+// finding document by the provided id schema
+export const byIdSchema = z.object({
   params: z.object({
     id: z
       .string()
@@ -20,4 +20,4 @@ export const findUserByIdSchema = z.object({
       .optional(),
   }),
 });
-export type FindUserByIdInput = z.TypeOf<typeof findUserByIdSchema>["params"];
+export type ByIdInput = z.TypeOf<typeof byIdSchema>["params"];

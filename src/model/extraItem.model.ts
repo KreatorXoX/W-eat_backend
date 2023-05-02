@@ -9,16 +9,18 @@ import { prop, modelOptions, Severity } from "@typegoose/typegoose";
   },
 })
 export class ExtraItem {
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   name: string;
 
-  @prop({ type: () => Number, min: 0, default: 0 })
+  @prop({ type: Number, min: 0, default: 0 })
   price: number;
 
   @prop({
-    set: (alergen: string[]) => alergen.join(","),
-    get: (alergen: string) => alergen.split(","),
+    get: (allergen: string[] | undefined) => allergen?.join(","),
+    set: (allergen: string | undefined) =>
+      typeof allergen === "string" ? allergen.split(",") : undefined,
     type: String,
+    required: false,
   })
-  alergens?: string[] | null;
+  allergens?: string[];
 }

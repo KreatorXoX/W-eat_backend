@@ -8,16 +8,16 @@ import bcrypt from "bcrypt";
 import { Order } from "./order.model";
 
 export class Address {
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   street!: string;
 
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   city!: string;
 
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   houseNumber!: string;
 
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   postalCode!: string;
 }
 
@@ -41,25 +41,31 @@ export class Address {
   },
 })
 export class User {
-  @prop({ lowercase: true, required: true, unique: true })
+  @prop({
+    type: String,
+    trim: true,
+    lowercase: true,
+    required: true,
+    unique: true,
+  })
   email: string;
 
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   firstName: string;
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   lastName: string;
 
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   password: string;
   @prop()
   passwordResetCode: string | null;
 
-  @prop({ default: false })
+  @prop({ type: Boolean, default: false })
   verified: boolean;
-  @prop({ required: true, default: () => uuidv4() })
+  @prop({ type: String, required: true, default: () => uuidv4() })
   verificationCode: string;
 
-  @prop({ default: false })
+  @prop({ type: Boolean, default: false })
   isAdmin: boolean;
 
   // Addresses

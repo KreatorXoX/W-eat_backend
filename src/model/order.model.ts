@@ -15,27 +15,27 @@ enum Status {
 }
 
 class OrderItem {
-  @prop({ ref: () => Product })
+  @prop({ ref: () => Product, required: true })
   product: Ref<Product>;
 
-  @prop({ ref: () => ExtraItem })
+  @prop({ ref: () => ExtraItem, required: true })
   extras: Ref<ExtraItem>[];
 
-  @prop({ type: () => Number, required: true })
+  @prop({ type: Number, required: true })
   quantity: number;
 
-  @prop({ type: () => String })
+  @prop({ type: String, required: true })
   size: string;
 
-  @prop({ type: () => String })
+  @prop({ type: String })
   note: string;
 }
 
 @pre<Order>("save", async function () {
-  if (this.isModified("status")) {
-    this.status = this.status;
-    return;
-  }
+  // if (this.isModified("status")) {
+  //   this.status = this.status;
+  //   return;
+  // }
 
   if (this.isModified("orderItems")) {
     let calculatedTotalPrice = 0;
@@ -79,32 +79,31 @@ export class Order {
   @prop({ ref: () => User, required: true })
   user: Ref<User>;
 
-  @prop({ type: () => Number, min: 0 })
+  @prop({ type: Number, min: 0 })
   deliveryCost: number;
 
-  @prop({ type: () => Number, min: 0 })
+  @prop({ type: Number, min: 0 })
   totalPrice: number;
 
   @prop({ required: true, enum: Status, default: Status.PENDING })
   status?: Status;
 
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   address: string;
 
-  @prop({ required: true, default: false })
+  @prop({ type: Boolean, required: true, default: false })
   isFavourite: boolean;
 
   // figure out what should we store in the order model
   // in accordance with the stripe api return
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   paymentMethod: string;
 
-  @prop()
+  @prop({ type: String })
   paymentId: string;
 
-  @prop()
+  @prop({ type: String })
   paymentStatus: string;
-
   // figure out what should we store in the order model
   // in accordance with the stripe api return
 }

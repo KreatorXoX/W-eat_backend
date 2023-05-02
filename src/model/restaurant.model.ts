@@ -17,25 +17,25 @@ import { Review } from "./review.model";
   },
 })
 export class Restaurant {
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   name: string;
 
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   address: string;
 
-  @prop({ type: () => String })
+  @prop({ type: String, trim: true, lowercase: true })
   email?: string;
 
-  @prop({ type: () => String, default: "some url" })
+  @prop({ type: String, default: "some url" })
   backgroundImage?: string;
 
-  @prop({ required: true })
+  @prop({ type: Number, required: true })
   minDeliveryAmount: number;
 
-  @prop({ required: true })
+  @prop({ type: Number, required: true })
   averageDeliveryTime: number;
 
-  @prop({ required: true })
+  @prop({ type: Number, required: true })
   deliveryCost: number;
 
   @prop({ required: true })

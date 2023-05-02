@@ -10,10 +10,10 @@ import { ExtraItem } from "./extraItem.model";
   },
 })
 export class Extra {
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   name: string;
 
-  @prop({ type: () => Boolean })
+  @prop({ type: Boolean })
   paid: boolean;
 
   @prop({ ref: () => ExtraItem })
