@@ -1,4 +1,11 @@
-import { prop, modelOptions, Severity, Ref, pre } from "@typegoose/typegoose";
+import {
+  prop,
+  modelOptions,
+  Severity,
+  Ref,
+  pre,
+  post,
+} from "@typegoose/typegoose";
 
 import { Category } from "./category.model";
 import { CategoryModel } from ".";
@@ -22,6 +29,16 @@ export class Size {
     } catch (error) {
       console.log("error in @pre save product");
     }
+  }
+})
+@post<Product>("findOneAndRemove", async function (product) {
+  try {
+    await CategoryModel.findByIdAndUpdate(
+      { _id: product.category },
+      { $pull: { products: product._id } }
+    );
+  } catch (error) {
+    console.log("error in @post remove product");
   }
 })
 @modelOptions({

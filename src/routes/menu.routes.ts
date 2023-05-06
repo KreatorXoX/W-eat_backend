@@ -6,6 +6,10 @@ import verifyJWT from "../middleware/verifyJWT";
 import verifyAdmin from "../middleware/verifyAdmin";
 
 import {
+  deleteCategoryHandler,
+  deleteExtraHandler,
+  deleteExtraItemHandler,
+  deleteProductHandler,
   findAllCategoriesHandler,
   findAllExtraItemsHandler,
   findAllExtrasHandler,
@@ -18,12 +22,19 @@ import {
   newExtraHandler,
   newExtraItemHandler,
   newProductHandler,
+  updateCategoryHandler,
+  updateExtraHandler,
+  updateExtraItemHandler,
+  updateProductHandler,
 } from "../controller/menu.controller";
 import {
   newCategorySchema,
   newExtraItemSchema,
   newExtraSchema,
   newProductSchema,
+  updateCategorySchema,
+  updateExtraSchema,
+  updateProductSchema,
 } from "../schema/menu.schema";
 import { byIdSchema } from "../schema/global.schema";
 
@@ -79,4 +90,47 @@ router.post(
   asyncHandler(newExtraItemHandler)
 );
 
+// PATCH
+router.patch(
+  "/api/menu/category/:id",
+  validateSchema(updateCategorySchema),
+  asyncHandler(updateCategoryHandler)
+);
+router.patch(
+  "/api/menu/product/:id",
+  validateSchema(updateProductSchema),
+  asyncHandler(updateProductHandler)
+);
+router.patch(
+  "/api/menu/extra/:id",
+  validateSchema(updateExtraSchema),
+  asyncHandler(updateExtraHandler)
+);
+router.patch(
+  "/api/menu/extraItem/:id",
+  validateSchema(byIdSchema),
+  asyncHandler(updateExtraItemHandler)
+);
+
+// DELETE
+router.delete(
+  "/api/menu/category/:id",
+  validateSchema(byIdSchema),
+  asyncHandler(deleteCategoryHandler)
+);
+router.delete(
+  "/api/menu/product/:id",
+  validateSchema(byIdSchema),
+  asyncHandler(deleteProductHandler)
+);
+router.delete(
+  "/api/menu/extra/:id",
+  validateSchema(byIdSchema),
+  asyncHandler(deleteExtraHandler)
+);
+router.delete(
+  "/api/menu/extraItem/:id",
+  validateSchema(byIdSchema),
+  asyncHandler(deleteExtraItemHandler)
+);
 export default router;

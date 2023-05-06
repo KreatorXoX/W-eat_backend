@@ -18,7 +18,7 @@ const validateSchema =
         .map((err: any) => `${err.message} - path: ${err.path.join(",")}`)
         .join(" \n ");
 
-      console.log(message);
+      console.log(error);
       return next(new HttpError(message, 409));
     }
   };

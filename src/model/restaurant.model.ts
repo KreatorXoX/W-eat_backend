@@ -9,9 +9,6 @@ import {
 import { Review } from "./review.model";
 
 @modelOptions({
-  schemaOptions: {
-    timestamps: true,
-  },
   options: {
     allowMixed: Severity.ALLOW,
   },
@@ -45,7 +42,7 @@ export class Restaurant {
   };
 
   @prop({ ref: () => Review })
-  reviews: Ref<Review>[];
+  reviews?: Ref<Review>[];
 
   async calculateRating(this: DocumentType<Restaurant>) {
     try {
@@ -53,15 +50,19 @@ export class Restaurant {
         path: "reviews",
         select: "rating",
       });
-      const totalReviews = restaurant.reviews.length;
+      const totalReviews = restaurant.reviews?.length;
+
+      if (!totalReviews) {
+        return 0;
+      }
       let totalRating = 0;
-      for (let review of restaurant.reviews) {
+      for (let review of restaurant.reviews!) {
         if (isDocument(review)) {
           totalRating += review.rating;
         }
       }
 
-      return totalRating / totalReviews;
+      return totalRating / totalReviews!;
     } catch (error) {
       console.log(error);
       return 0;
