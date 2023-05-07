@@ -12,10 +12,10 @@ import { User } from "./user.model";
 })
 export class Review {
   @prop({ ref: () => User })
-  user?: Ref<User>;
+  user: Ref<User>;
 
-  @prop({ type: String, required: true })
-  content: string;
+  @prop({ type: String })
+  content?: string;
 
   @prop({ type: Number, min: 0, max: 5, required: true })
   rating: number;

@@ -8,18 +8,24 @@ import { ProductModel, ExtraItemModel } from ".";
 
 enum Status {
   PENDING = "pending",
-  CONFIRMED = "comfirmed",
+  CONFIRMED = "confirmed",
   CANCELED = "canceled",
   DELIVERED = "delivered",
   SHIPPED = "shipped",
+}
+
+enum PaymentStatus {
+  SUCCESS = "successful",
+  FAILED = "failed",
+  PAD = "pay at the door",
 }
 
 class OrderItem {
   @prop({ ref: () => Product, required: true })
   product: Ref<Product>;
 
-  @prop({ ref: () => ExtraItem, required: true })
-  extras: Ref<ExtraItem>[];
+  @prop({ ref: () => ExtraItem })
+  extras?: Ref<ExtraItem>[];
 
   @prop({ type: Number, required: true })
   quantity: number;
@@ -28,7 +34,7 @@ class OrderItem {
   size: string;
 
   @prop({ type: String })
-  note: string;
+  note?: string;
 }
 
 @pre<Order>("save", async function () {
@@ -73,25 +79,25 @@ class OrderItem {
   },
 })
 export class Order {
-  @prop({ type: () => OrderItem, _id: false })
+  @prop({ type: () => OrderItem, _id: false, required: true })
   orderItems: OrderItem[];
 
   @prop({ ref: () => User, required: true })
   user: Ref<User>;
 
   @prop({ type: Number, min: 0 })
-  deliveryCost: number;
+  deliveryCost?: number;
 
   @prop({ type: Number, min: 0 })
-  totalPrice: number;
+  totalPrice?: number;
 
-  @prop({ required: true, enum: Status, default: Status.PENDING })
-  status?: Status;
+  @prop({ enum: Status, default: Status.PENDING })
+  status: Status;
 
   @prop({ type: String, required: true })
   address: string;
 
-  @prop({ type: Boolean, required: true, default: false })
+  @prop({ type: Boolean, default: false })
   isFavourite: boolean;
 
   // figure out what should we store in the order model
@@ -100,10 +106,10 @@ export class Order {
   paymentMethod: string;
 
   @prop({ type: String })
-  paymentId: string;
+  paymentId?: string;
 
-  @prop({ type: String })
-  paymentStatus: string;
+  @prop({ enum: PaymentStatus, default: PaymentStatus.PAD })
+  paymentStatus: PaymentStatus;
   // figure out what should we store in the order model
   // in accordance with the stripe api return
 }

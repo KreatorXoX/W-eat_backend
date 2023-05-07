@@ -39,7 +39,7 @@ import {
 import { findRestaurant } from "../service/restaurant.service";
 
 // Menu
-export async function getMenu(
+export async function getMenuHandler(
   req: Request<{}, {}, {}>,
   res: Response,
   next: NextFunction
