@@ -14,10 +14,14 @@ enum Status {
   SHIPPED = "shipped",
 }
 
-enum PaymentStatus {
+export enum PaymentStatus {
   SUCCESS = "successful",
   FAILED = "failed",
-  PAD = "pay at the door",
+  PENDING = "pending",
+}
+export enum PaymentMethod {
+  CARD = "card",
+  PAD = "pay at door",
 }
 
 class OrderItem {
@@ -27,7 +31,7 @@ class OrderItem {
   @prop({ ref: () => ExtraItem })
   extras?: Ref<ExtraItem>[];
 
-  @prop({ type: Number, required: true })
+  @prop({ type: Number, required: true, min: 1 })
   quantity: number;
 
   @prop({ type: String, required: true })
@@ -102,13 +106,13 @@ export class Order {
 
   // figure out what should we store in the order model
   // in accordance with the stripe api return
-  @prop({ type: String, required: true })
+  @prop({ enum: PaymentMethod, required: true })
   paymentMethod: string;
 
   @prop({ type: String })
   paymentId?: string;
 
-  @prop({ enum: PaymentStatus, default: PaymentStatus.PAD })
+  @prop({ enum: PaymentStatus, default: PaymentStatus.PENDING })
   paymentStatus: PaymentStatus;
   // figure out what should we store in the order model
   // in accordance with the stripe api return
