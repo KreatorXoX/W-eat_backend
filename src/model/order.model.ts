@@ -6,7 +6,7 @@ import { ExtraItem } from "./extraItem.model";
 
 import { ProductModel, ExtraItemModel } from ".";
 
-enum Status {
+export enum Status {
   PENDING = "pending",
   CONFIRMED = "confirmed",
   CANCELED = "canceled",
@@ -42,11 +42,6 @@ class OrderItem {
 }
 
 @pre<Order>("save", async function () {
-  // if (this.isModified("status")) {
-  //   this.status = this.status;
-  //   return;
-  // }
-
   if (this.isModified("orderItems")) {
     let calculatedTotalPrice = 0;
 
@@ -89,6 +84,15 @@ export class Order {
   @prop({ ref: () => User, required: true })
   user: Ref<User>;
 
+  @prop({ type: String, required: true })
+  fullName: string;
+
+  @prop({ type: String, required: true })
+  email: string;
+
+  @prop({ type: String, required: true })
+  phoneNumber: string;
+
   @prop({ type: Number, min: 0 })
   deliveryCost?: number;
 
@@ -100,6 +104,9 @@ export class Order {
 
   @prop({ type: String, required: true })
   address: string;
+
+  @prop({ type: String, required: true })
+  placeOrderTime: string;
 
   @prop({ type: Boolean, default: false })
   isFavourite: boolean;

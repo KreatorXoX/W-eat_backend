@@ -47,19 +47,22 @@ export async function findOrderByIdHandler(
 }
 
 export async function newOrderHandler(
-  req: Request<{}, {}, NewOrderInput>,
+  // req: Request<{}, {}, NewOrderInput>,
+  req: Request,
   res: Response,
   next: NextFunction
 ) {
   const body = req.body;
 
-  const order = await createOrder(body);
+  // const order = await createOrder(body);
 
-  if (!order) {
-    return next(new HttpError("Error creating new order", 404));
-  }
+  // if (!order) {
+  //   return next(new HttpError("Error creating new order", 404));
+  // }
 
-  res.json({ url: `${process.env.CLIENT_BASE_URL}/payment?success=true` });
+  // res.json({ url: `${process.env.CLIENT_BASE_URL}/payment?success=true` });
+
+  res.json({ ...body });
 }
 
 export async function newStripeOrderHandler(
@@ -112,25 +115,27 @@ export async function newStripeOrderHandler(
     })
   );
 
-  const extraLineIItems:
+  const extraLineItems:
     | Stripe.Checkout.SessionCreateParams.LineItem[]
     | undefined = extraItems.map((item) => item).flat();
 
-  const session = await stripe.checkout.sessions.create({
-    line_items: [...productLineItems, ...extraLineIItems],
-    mode: "payment",
-    success_url: `${process.env.CLIENT_BASE_URL}/payment?success=true`,
-    cancel_url: `${process.env.CLIENT_BASE_URL}/payment?success=false`,
-    payment_method_types: ["card"],
-  });
+  // const session = await stripe.checkout.sessions.create({
+  //   line_items: [...productLineItems, ...extraLineItems],
+  //   mode: "payment",
+  //   success_url: `${process.env.CLIENT_BASE_URL}/payment?success=true`,
+  //   cancel_url: `${process.env.CLIENT_BASE_URL}/payment?success=false`,
+  //   payment_method_types: ["card"],
+  // });
 
-  const order = await createOrder(body);
+  // const order = await createOrder(body);
 
-  if (!order) {
-    return next(new HttpError("Error creating new order", 404));
-  }
+  // if (!order) {
+  //   return next(new HttpError("Error creating new order", 404));
+  // }
 
-  res.json({ stripeSession: session });
+  // res.json({ stripeSession: session });
+
+  res.json({ ...productLineItems, ...extraLineItems });
 }
 
 export async function updateOrderHandler(

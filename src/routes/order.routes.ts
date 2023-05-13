@@ -24,12 +24,12 @@ router.get(
 );
 router.post(
   "/api/orders",
-  validateSchema(newOrderSchema),
+  // validateSchema(newOrderSchema),
   asyncHandler(newOrderHandler)
 );
 router.post(
   "/api/orders/checkout",
-  validateSchema(newOrderSchema),
+  // validateSchema(newOrderSchema),
   asyncHandler(newStripeOrderHandler)
 );
 
