@@ -107,3 +107,11 @@ export const updateOrderSchema = z.object({
   }),
 });
 export type UpdateOrderInput = z.TypeOf<typeof updateOrderSchema>;
+
+// get session schema
+export const getSessionSchema = z.object({
+  params: z.object({
+    id: z.string(),
+  }),
+});
+export type GetSessionInput = z.TypeOf<typeof getSessionSchema>["params"];

@@ -10,6 +10,7 @@ export function findOrders() {
 export function findOrderById(id: mongoose.Types.ObjectId) {
   return OrderModel.findById(id).exec();
 }
+
 export function createOrder(input: Partial<Order>) {
   return OrderModel.create(input);
 }

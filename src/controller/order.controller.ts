@@ -1,7 +1,11 @@
 import { Response, Request, NextFunction } from "express";
 import Stripe from "stripe";
 import HttpError from "../model/http-error";
-import { NewOrderInput, UpdateOrderInput } from "../schema/order.schema";
+import {
+  GetSessionInput,
+  NewOrderInput,
+  UpdateOrderInput,
+} from "../schema/order.schema";
 import { findProductById } from "../service/menu.service";
 import {
   createOrder,
@@ -63,7 +67,7 @@ export async function newOrderHandler(
   res.json({ url: `${process.env.CLIENT_BASE_URL}/payment?success=true` });
 }
 
-export async function newStripeOrderHandler(
+export async function stripeNewSessionHandler(
   req: Request<{}, {}, NewOrderInput>,
   res: Response,
   next: NextFunction
@@ -131,13 +135,29 @@ export async function newStripeOrderHandler(
     return next(new HttpError("Error creating stripe url", 500));
   }
 
-  const order = await createOrder({ ...body, paymentId: session.id });
+  // const order = await createOrder({ ...body, paymentId: session.id });
 
-  if (!order) {
-    return next(new HttpError("Error creating new order", 500));
+  // if (!order) {
+  //   return next(new HttpError("Error creating new order", 500));
+  // }
+
+  res.status(200).json({ url, sessionId: session.id });
+}
+
+export async function findSessionByIdHandler(
+  req: Request<GetSessionInput, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+
+  const session = await stripe.checkout.sessions.retrieve(id);
+
+  if (!session) {
+    return next(new HttpError("Session not found", 404));
   }
 
-  res.status(200).json({ url });
+  res.json(session);
 }
 
 export async function updateOrderHandler(

@@ -7,11 +7,16 @@ import verifyAdmin from "../middleware/verifyAdmin";
 import {
   findOrderByIdHandler,
   findOrdersHandler,
+  findSessionByIdHandler,
   newOrderHandler,
-  newStripeOrderHandler,
+  stripeNewSessionHandler,
   updateOrderHandler,
 } from "../controller/order.controller";
-import { newOrderSchema, updateOrderSchema } from "../schema/order.schema";
+import {
+  getSessionSchema,
+  newOrderSchema,
+  updateOrderSchema,
+} from "../schema/order.schema";
 import { byIdSchema } from "../schema/global.schema";
 
 const router = express.Router();
@@ -22,6 +27,11 @@ router.get(
   validateSchema(byIdSchema),
   asyncHandler(findOrderByIdHandler)
 );
+router.get(
+  "/api/orders/sessions/:id",
+  validateSchema(getSessionSchema),
+  asyncHandler(findSessionByIdHandler)
+);
 router.post(
   "/api/orders",
   validateSchema(newOrderSchema),
@@ -30,7 +40,7 @@ router.post(
 router.post(
   "/api/orders/checkout",
   // validateSchema(newOrderSchema),
-  asyncHandler(newStripeOrderHandler)
+  asyncHandler(stripeNewSessionHandler)
 );
 
 router.patch(
