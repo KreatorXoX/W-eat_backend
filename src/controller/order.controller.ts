@@ -125,13 +125,19 @@ export async function newStripeOrderHandler(
     payment_method_types: ["card"],
   });
 
-  const order = await createOrder(body);
+  const url = session.url;
 
-  if (!order) {
-    return next(new HttpError("Error creating new order", 404));
+  if (!url) {
+    return next(new HttpError("Error creating stripe url", 500));
   }
 
-  res.json({ stripeSession: session });
+  const order = await createOrder({ ...body, paymentId: session.id });
+
+  if (!order) {
+    return next(new HttpError("Error creating new order", 500));
+  }
+
+  res.status(200).json({ url });
 }
 
 export async function updateOrderHandler(
