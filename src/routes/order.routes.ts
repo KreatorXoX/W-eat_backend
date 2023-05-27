@@ -12,11 +12,7 @@ import {
   stripeNewSessionHandler,
   updateOrderHandler,
 } from "../controller/order.controller";
-import {
-  getSessionSchema,
-  newOrderSchema,
-  updateOrderSchema,
-} from "../schema/order.schema";
+import { newOrderSchema, updateOrderSchema } from "../schema/order.schema";
 import { byIdSchema } from "../schema/global.schema";
 
 const router = express.Router();
@@ -27,11 +23,7 @@ router.get(
   validateSchema(byIdSchema),
   asyncHandler(findOrderByIdHandler)
 );
-router.get(
-  "/api/orders/sessions/:id",
-  validateSchema(getSessionSchema),
-  asyncHandler(findSessionByIdHandler)
-);
+
 router.post(
   "/api/orders",
   validateSchema(newOrderSchema),

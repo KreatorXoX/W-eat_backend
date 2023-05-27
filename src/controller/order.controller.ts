@@ -135,13 +135,15 @@ export async function stripeNewSessionHandler(
     return next(new HttpError("Error creating stripe url", 500));
   }
 
-  // const order = await createOrder({ ...body, paymentId: session.id });
+  const order = await createOrder(body);
 
-  // if (!order) {
-  //   return next(new HttpError("Error creating new order", 500));
-  // }
+  if (!order) {
+    return next(new HttpError("Error creating new order", 500));
+  }
 
-  res.status(200).json({ url, sessionId: session.id });
+  res
+    .status(200)
+    .json({ url, sessionId: session.id, orderId: order._id.toString() });
 }
 
 export async function findSessionByIdHandler(

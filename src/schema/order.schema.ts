@@ -98,20 +98,14 @@ export const updateOrderSchema = z.object({
       .optional(),
   }),
   body: z.object({
-    status: z.nativeEnum(Status).optional(),
-    paymentId: z
+    sessionId: z
       .string()
-      .nonempty({ message: "Payment id cannot be empty string" })
+      .nonempty({ message: "Session id cannot be empty string" })
       .optional(),
-    paymentStatus: z.nativeEnum(PaymentStatus).optional(),
+    orderId: z
+      .string()
+      .nonempty({ message: "Order id cannot be empty string" }),
+    isSuccess: z.boolean(),
   }),
 });
 export type UpdateOrderInput = z.TypeOf<typeof updateOrderSchema>;
-
-// get session schema
-export const getSessionSchema = z.object({
-  params: z.object({
-    id: z.string(),
-  }),
-});
-export type GetSessionInput = z.TypeOf<typeof getSessionSchema>["params"];
