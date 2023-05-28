@@ -21,3 +21,7 @@ export function updateOrder(
 ) {
   return OrderModel.findOneAndUpdate(query, update, options).exec();
 }
+
+export function deleteOrder(id: mongoose.Types.ObjectId) {
+  return OrderModel.findByIdAndDelete(id).exec();
+}

@@ -8,7 +8,7 @@ import { ProductModel, ExtraItemModel } from ".";
 
 export enum Status {
   PENDING = "pending",
-  CONFIRMED = "confirmed",
+  ACCEPTED = "accepted",
   CANCELED = "canceled",
   DELIVERED = "delivered",
   SHIPPED = "shipped",
@@ -16,7 +16,6 @@ export enum Status {
 
 export enum PaymentStatus {
   SUCCESS = "successful",
-  FAILED = "failed",
   PENDING = "pending",
 }
 export enum PaymentMethod {
@@ -115,9 +114,6 @@ export class Order {
   // in accordance with the stripe api return
   @prop({ enum: PaymentMethod, required: true })
   paymentMethod: string;
-
-  @prop({ type: String })
-  paymentId?: string;
 
   @prop({ enum: PaymentStatus, default: PaymentStatus.PENDING })
   paymentStatus: PaymentStatus;

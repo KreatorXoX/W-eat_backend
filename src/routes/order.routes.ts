@@ -5,12 +5,12 @@ import validateSchema from "../middleware/validateSchema";
 import verifyJWT from "../middleware/verifyJWT";
 import verifyAdmin from "../middleware/verifyAdmin";
 import {
+  deleteOrderHandler,
   findOrderByIdHandler,
   findOrdersHandler,
-  findSessionByIdHandler,
   newOrderHandler,
-  stripeNewSessionHandler,
   updateOrderHandler,
+  validateOrderHandler,
 } from "../controller/order.controller";
 import { newOrderSchema, updateOrderSchema } from "../schema/order.schema";
 import { byIdSchema } from "../schema/global.schema";
@@ -29,16 +29,23 @@ router.post(
   validateSchema(newOrderSchema),
   asyncHandler(newOrderHandler)
 );
-router.post(
-  "/api/orders/checkout",
-  // validateSchema(newOrderSchema),
-  asyncHandler(stripeNewSessionHandler)
+
+router.patch(
+  "/api/orders/validate-order/:id",
+  validateSchema(byIdSchema),
+  asyncHandler(validateOrderHandler)
 );
 
 router.patch(
   "/api/orders/:id",
   validateSchema(updateOrderSchema),
   asyncHandler(updateOrderHandler)
+);
+
+router.delete(
+  "/api/orders/:id",
+  validateSchema(byIdSchema),
+  asyncHandler(deleteOrderHandler)
 );
 
 export default router;

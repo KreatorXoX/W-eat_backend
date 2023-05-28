@@ -70,10 +70,6 @@ export const newOrderSchema = z.object({
       .nonempty({ message: "Time cannot be empty string" }),
     isFavourite: z.boolean().optional(),
     paymentMethod: z.nativeEnum(PaymentMethod),
-    paymentId: z
-      .string()
-      .nonempty({ message: "Payment id cannot be empty string" })
-      .optional(),
     paymentStatus: z.nativeEnum(PaymentStatus).optional(),
   }),
 });
@@ -98,14 +94,8 @@ export const updateOrderSchema = z.object({
       .optional(),
   }),
   body: z.object({
-    sessionId: z
-      .string()
-      .nonempty({ message: "Session id cannot be empty string" })
-      .optional(),
-    orderId: z
-      .string()
-      .nonempty({ message: "Order id cannot be empty string" }),
-    isSuccess: z.boolean(),
+    status: z.nativeEnum(Status).optional(),
+    paymentStatus: z.nativeEnum(PaymentStatus).optional(),
   }),
 });
 export type UpdateOrderInput = z.TypeOf<typeof updateOrderSchema>;

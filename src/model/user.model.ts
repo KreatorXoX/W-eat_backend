@@ -68,6 +68,9 @@ export class User {
   @prop({ type: Boolean, default: false })
   isAdmin: boolean;
 
+  @prop({ type: Boolean, default: false })
+  isSuspended: boolean;
+
   // Addresses
   @prop({ type: () => Address, _id: false })
   homeAddress?: Address;
