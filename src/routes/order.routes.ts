@@ -10,7 +10,6 @@ import {
   findOrdersHandler,
   newOrderHandler,
   updateOrderHandler,
-  validateOrderHandler,
 } from "../controller/order.controller";
 import { newOrderSchema, updateOrderSchema } from "../schema/order.schema";
 import { byIdSchema } from "../schema/global.schema";
@@ -28,12 +27,6 @@ router.post(
   "/api/orders",
   validateSchema(newOrderSchema),
   asyncHandler(newOrderHandler)
-);
-
-router.patch(
-  "/api/orders/validate-order/:id",
-  validateSchema(byIdSchema),
-  asyncHandler(validateOrderHandler)
 );
 
 router.patch(

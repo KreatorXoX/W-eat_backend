@@ -16,6 +16,7 @@ import {
 } from "../service/user.service";
 
 import {
+  ChangePasswordInput,
   ForgotPasswordInput,
   LoginUserInput,
   RegisterUserInput,
@@ -63,7 +64,7 @@ export const registerUserHandler = async (
   }
 
   await sendEmail({
-    from: "test@example.com",
+    from: process.env.NODEMAILER_USER!,
     to: user.email,
     subject: "Please verify your account",
     text: `Verification code ${user.verificationCode}, Id:${user._id}`,
@@ -206,13 +207,36 @@ export async function verifyUserHandler(
 
   user.verified = true;
   await user.save();
-  res.send(`
-   <div>
-        <h2>User Verified</h2>
-        <br />
-        <a href=${process.env.CLIENT_BASE_URL}>click to go to the site</a>
-      </div>
-  `);
+  res.redirect(process.env.CLIENT_BASE_URL!);
+}
+
+export async function changePasswordHandler(
+  req: Request<{}, {}, ChangePasswordInput>,
+  res: Response,
+  next: NextFunction
+) {
+  const { id, oldPassword, newPassword } = req.body;
+
+  const user = await findUserById(id);
+
+  if (!user) {
+    return next(new HttpError("User not found", 404));
+  }
+
+  if (!user.verified) {
+    return next(new HttpError("User not verified", 400));
+  }
+
+  const match = await user.validatePassword(oldPassword);
+
+  if (!match) {
+    return next(new HttpError("Your credentials don't match", 401));
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  res.json({ message: "Your password changed" }).status(200);
 }
 
 export async function forgotPasswordHandler(
@@ -241,7 +265,7 @@ export async function forgotPasswordHandler(
 
   await sendEmail({
     to: user.email,
-    from: "text@example.com",
+    from: process.env.NODEMAILER_USER!,
     subject: "Reset your password",
     text: `Password reset link : ${passwordResetCode} ${user._id}`,
     html: `<a href="${process.env.CLIENT_BASE_URL}/reset-password/${user._id}/${user.passwordResetCode}">Click to Reset your Password</a>`,

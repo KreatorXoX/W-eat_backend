@@ -10,6 +10,7 @@ import {
   forgotPasswordHandler,
   resetPasswordHandler,
   verifyUserHandler,
+  changePasswordHandler,
 } from "../controller/auth.controller";
 
 import {
@@ -18,6 +19,7 @@ import {
   verifyUserSchema,
   loginUserSchema,
   registerUserSchema,
+  changePasswordSchema,
 } from "../schema/auth.schema";
 
 import loginLimiter from "../middleware/loginLimiter";
@@ -49,11 +51,19 @@ router.get(
   validateSchema(verifyUserSchema),
   asyncHandler(verifyUserHandler)
 );
+
+router.post(
+  "/api/auth/change-password",
+  validateSchema(changePasswordSchema),
+  asyncHandler(changePasswordHandler)
+);
+
 router.post(
   "/api/auth/forgot-password",
   validateSchema(forgotPasswordSchema),
   asyncHandler(forgotPasswordHandler)
 );
+
 router.post(
   "/api/auth/reset-password/:id/:passwordResetCode",
   validateSchema(resetPasswordSchema),

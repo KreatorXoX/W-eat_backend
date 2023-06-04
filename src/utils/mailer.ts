@@ -9,27 +9,27 @@ import nodemailer, { SendMailOptions } from "nodemailer";
 // createTestCreds();
 
 // use the smtp constant for testing purposes.
-const smtp = {
-  user: "s5joj4uoxq2g6y74@ethereal.email",
-  pass: "nmJwZgMEwVbfBRn1W2",
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false,
-};
+// const smtp = {
+//   user: "s5joj4uoxq2g6y74@ethereal.email",
+//   pass: "nmJwZgMEwVbfBRn1W2",
+//   host: "smtp.ethereal.email",
+//   port: 587,
+//   secure: false,
+// };
 
 // const transporter = nodemailer.createTransport({
-//   service: process.env.NODEMAILER_SERVICE!,
+//   ...smtp,
 //   auth: {
-//     user: process.env.NODEMAILER_USER!,
-//     pass: process.env.NODEMAILER_PASS!,
+//     user: smtp.user,
+//     pass: smtp.pass,
 //   },
 // });
 
 const transporter = nodemailer.createTransport({
-  ...smtp,
+  service: process.env.NODEMAILER_SERVICE!,
   auth: {
-    user: smtp.user,
-    pass: smtp.pass,
+    user: process.env.NODEMAILER_USER!,
+    pass: process.env.NODEMAILER_PASS!,
   },
 });
 

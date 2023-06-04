@@ -173,23 +173,3 @@ export async function deleteOrderHandler(
 
   res.json(order);
 }
-export async function validateOrderHandler(
-  req: Request<ByIdInput, {}, {}>,
-  res: Response,
-  next: NextFunction
-) {
-  const message = "Error validating Order";
-
-  const { id } = req.params;
-
-  const order = await findOrderById(id!);
-
-  if (!order) {
-    return next(new HttpError(message, 404));
-  }
-
-  order.paymentStatus = PaymentStatus.SUCCESS;
-  await order.save();
-
-  res.json(order);
-}

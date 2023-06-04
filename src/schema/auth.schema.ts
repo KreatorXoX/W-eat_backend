@@ -4,8 +4,9 @@ import { z } from "zod";
 export const registerUserSchema = z.object({
   body: z
     .object({
-      firstName: z.string({ required_error: "First name is required" }),
-      lastName: z.string({ required_error: "Last name is required" }),
+      name: z
+        .string({ required_error: "Name is required" })
+        .nonempty("Name can not be an empty string"),
       email: z.string().email().nonempty(),
       password: z
         .string({ required_error: "Password is required" })
@@ -40,6 +41,23 @@ export const verifyUserSchema = z.object({
   }),
 });
 export type VerifyUserInput = z.TypeOf<typeof verifyUserSchema>["params"];
+
+// change password schema
+export const changePasswordSchema = z.object({
+  body: z.object({
+    id: z
+      .string({ required_error: "User id is required" })
+      .nonempty("User id cannot be empty string"),
+    oldPassword: z
+      .string({ required_error: "Password is required" })
+      .min(6, { message: "Minimum of 6 Chars" }),
+    newPassword: z
+      .string({ required_error: "Password is required" })
+      .min(6, { message: "Minimum of 6 Chars" }),
+  }),
+});
+
+export type ChangePasswordInput = z.TypeOf<typeof changePasswordSchema>["body"];
 
 // forgot password schema
 export const forgotPasswordSchema = z.object({

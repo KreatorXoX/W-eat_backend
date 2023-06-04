@@ -51,9 +51,7 @@ export class User {
   email: string;
 
   @prop({ type: String, required: true })
-  firstName: string;
-  @prop({ type: String, required: true })
-  lastName: string;
+  name: string;
 
   @prop({ type: String, required: true })
   password: string;
