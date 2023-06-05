@@ -44,17 +44,25 @@ export type VerifyUserInput = z.TypeOf<typeof verifyUserSchema>["params"];
 
 // change password schema
 export const changePasswordSchema = z.object({
-  body: z.object({
-    id: z
-      .string({ required_error: "User id is required" })
-      .nonempty("User id cannot be empty string"),
-    oldPassword: z
-      .string({ required_error: "Password is required" })
-      .min(6, { message: "Minimum of 6 Chars" }),
-    newPassword: z
-      .string({ required_error: "Password is required" })
-      .min(6, { message: "Minimum of 6 Chars" }),
-  }),
+  body: z
+    .object({
+      id: z
+        .string({ required_error: "User id is required" })
+        .nonempty("User id cannot be empty string"),
+      oldPassword: z
+        .string({ required_error: "Password is required" })
+        .min(6, { message: "Minimum of 6 Chars" }),
+      newPassword: z
+        .string({ required_error: "Password is required" })
+        .min(6, { message: "Minimum of 6 Chars" }),
+      confirmNewPassword: z
+        .string({ required_error: "Password is required" })
+        .min(6, { message: "Minimum of 6 Chars" }),
+    })
+    .refine((data) => data.confirmNewPassword === data.newPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    }),
 });
 
 export type ChangePasswordInput = z.TypeOf<typeof changePasswordSchema>["body"];

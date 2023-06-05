@@ -54,7 +54,7 @@ export const registerUserHandler = async (
   res: Response,
   next: NextFunction
 ) => {
-  const message = "Invalid password or email! please check your credentials";
+  const message = "Failed to register new user";
   const body = req.body;
 
   const user = await registerUser(body);
@@ -271,7 +271,7 @@ export async function forgotPasswordHandler(
     html: `<a href="${process.env.CLIENT_BASE_URL}/reset-password/${user._id}/${user.passwordResetCode}">Click to Reset your Password</a>`,
   });
 
-  res.send(message);
+  res.status(200).json({ message });
 }
 
 export async function resetPasswordHandler(
