@@ -319,8 +319,8 @@ export const googleOAuthHandler = async (
       },
       {
         email: decodedUser.email,
-        firstName: decodedUser.given_name || decodedUser.name.split(" ")[0],
-        lastName: decodedUser.family_name || decodedUser.name.split(" ")[1],
+        name:
+          decodedUser.given_name + decodedUser.family_name || decodedUser.name,
         verified: true,
         isAdmin: false,
       },
@@ -356,10 +356,11 @@ export const googleOAuthHandler = async (
     });
 
     res.redirect(
-      `${process.env.CLIENT_BASE_URL!}/oauth/success?accessToken=${accessToken}`
+      `${process.env
+        .CLIENT_BASE_URL!}/oauth?success=true&accessToken=${accessToken}`
     );
   } catch (error) {
     console.log(error);
-    res.redirect(`${process.env.CLIENT_BASE_URL!}/oauth/error`);
+    res.redirect(`${process.env.CLIENT_BASE_URL!}/oauth?success=false`);
   }
 };
