@@ -2,9 +2,13 @@ import { Response, Request, NextFunction } from "express";
 
 import HttpError from "../model/http-error";
 
-import { findAllUsers, findUserByIdForClient } from "../service/user.service";
+import {
+  findAllUsers,
+  findAndUpdateUser,
+  findUserByIdForClient,
+} from "../service/user.service";
 
-import { FindUserByIdInput } from "../schema/user.schema";
+import { FindUserByIdInput, UpdateUserInput } from "../schema/user.schema";
 
 export async function findAllUsersHandler(
   req: Request<{}, {}, {}>,
@@ -34,4 +38,28 @@ export async function findUserByIdForClientHandler(
   }
 
   res.json(user);
+}
+
+// Update User
+export async function updateUserHandler(
+  req: Request<UpdateUserInput["params"], {}, UpdateUserInput["body"]>,
+  res: Response,
+  next: NextFunction
+) {
+  const message = "Error updating User";
+  const body = req.body;
+  const { id } = req.params;
+
+  const user = await findAndUpdateUser(
+    { _id: id },
+    {
+      ...body,
+    }
+  );
+
+  if (!user) {
+    return next(new HttpError(message, 404));
+  }
+
+  res.json({ id: user._id });
 }

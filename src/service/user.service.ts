@@ -3,13 +3,19 @@ import { DocumentType } from "@typegoose/typegoose";
 
 import { User } from "../model/user.model";
 import { UserModel } from "../model";
+
 // for client
 
 export function findAllUsers() {
-  return UserModel.find().select("_id firstName lastName").lean().exec();
+  return UserModel.find().select("_id").lean().exec();
 }
 export function findUserByIdForClient(id: mongoose.Types.ObjectId) {
-  return UserModel.findById(id).select("_id firstName lastName").lean().exec();
+  return UserModel.findById(id)
+    .select(
+      "_id name email orders favouriteOrders homeAddress workAddress otherAddress"
+    )
+    .lean()
+    .exec();
 }
 
 // for server
