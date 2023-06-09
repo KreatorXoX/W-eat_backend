@@ -7,10 +7,10 @@ import {
   findAndUpdateUser,
   findOrderByUser,
   findUserByIdForClient,
-  findUserFavourites,
 } from "../service/user.service";
 
 import { FindUserByIdInput, UpdateUserInput } from "../schema/user.schema";
+import { isDocument } from "@typegoose/typegoose";
 
 export async function findAllUsersHandler(
   req: Request<{}, {}, {}>,
@@ -55,23 +55,15 @@ export async function findOrdersByUserHandler(
     return next(new HttpError("User not found", 404));
   }
 
-  res.json(userWithOrders.orders);
-}
+  const favouriteOrders = userWithOrders.orders?.filter((order) => {
+    if (isDocument(order)) {
+      return order.isFavourite === true;
+    }
+  });
 
-export async function findUserFavouritesHandler(
-  req: Request<FindUserByIdInput, {}, {}>,
-  res: Response,
-  next: NextFunction
-) {
-  const { id } = req.params;
+  const allOrders = userWithOrders.orders;
 
-  const userWithFavourites = await findUserFavourites(id!);
-
-  if (!userWithFavourites) {
-    return next(new HttpError("User not found", 404));
-  }
-
-  res.json(userWithFavourites.favouriteOrders);
+  res.json({ allOrders, favouriteOrders });
 }
 
 // Update User

@@ -5,7 +5,6 @@ import {
   findAllUsersHandler,
   findOrdersByUserHandler,
   findUserByIdForClientHandler,
-  findUserFavouritesHandler,
   updateUserHandler,
 } from "../controller/user.controller";
 
@@ -29,12 +28,6 @@ router.get(
   "/api/user/orders/:id",
   validateSchema(findUserByIdSchema),
   asyncHandler(findOrdersByUserHandler)
-);
-
-router.get(
-  "/api/user/favourites/:id",
-  validateSchema(findUserByIdSchema),
-  asyncHandler(findUserFavouritesHandler)
 );
 
 // PATCH

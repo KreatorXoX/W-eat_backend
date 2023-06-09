@@ -31,20 +31,6 @@ export function findOrderByUser(id: mongoose.Types.ObjectId) {
     })
     .exec();
 }
-export function findUserFavourites(id: mongoose.Types.ObjectId) {
-  return UserModel.findById(id)
-    .populate({
-      path: "favouriteOrders",
-      select:
-        "orderItems deliveryCost totalPrice status address placeOrderTime paymentMethod paymentStatus createdAt",
-      populate: {
-        path: "orderItems",
-        populate: "product extras",
-        select: "product extras quantity size note",
-      },
-    })
-    .exec();
-}
 
 // for server
 
