@@ -3,7 +3,9 @@ import asyncHandler from "express-async-handler";
 
 import {
   findAllUsersHandler,
+  findOrdersByUserHandler,
   findUserByIdForClientHandler,
+  findUserFavouritesHandler,
   updateUserHandler,
 } from "../controller/user.controller";
 
@@ -15,12 +17,24 @@ import verifyAdmin from "../middleware/verifyAdmin";
 
 const router = express.Router();
 
-router.get("/api/users", verifyAdmin, asyncHandler(findAllUsersHandler));
+router.get("/api/users", asyncHandler(findAllUsersHandler));
 
 router.get(
   "/api/user/:id",
   validateSchema(findUserByIdSchema),
   asyncHandler(findUserByIdForClientHandler)
+);
+
+router.get(
+  "/api/user/orders/:id",
+  validateSchema(findUserByIdSchema),
+  asyncHandler(findOrdersByUserHandler)
+);
+
+router.get(
+  "/api/user/favourites/:id",
+  validateSchema(findUserByIdSchema),
+  asyncHandler(findUserFavouritesHandler)
 );
 
 // PATCH

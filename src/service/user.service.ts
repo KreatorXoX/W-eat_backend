@@ -11,10 +11,38 @@ export function findAllUsers() {
 }
 export function findUserByIdForClient(id: mongoose.Types.ObjectId) {
   return UserModel.findById(id)
-    .select(
-      "_id name email orders favouriteOrders homeAddress workAddress otherAddress"
-    )
+    .select("_id name email homeAddress workAddress otherAddress")
     .lean()
+    .exec();
+}
+
+export function findOrderByUser(id: mongoose.Types.ObjectId) {
+  return UserModel.findById(id)
+    .select("orders")
+    .populate({
+      path: "orders",
+      select:
+        "orderItems isFavourite deliveryCost totalPrice status address placeOrderTime paymentMethod paymentStatus createdAt",
+      populate: {
+        path: "orderItems",
+        populate: "product extras",
+        select: "product extras quantity size note",
+      },
+    })
+    .exec();
+}
+export function findUserFavourites(id: mongoose.Types.ObjectId) {
+  return UserModel.findById(id)
+    .populate({
+      path: "favouriteOrders",
+      select:
+        "orderItems deliveryCost totalPrice status address placeOrderTime paymentMethod paymentStatus createdAt",
+      populate: {
+        path: "orderItems",
+        populate: "product extras",
+        select: "product extras quantity size note",
+      },
+    })
     .exec();
 }
 

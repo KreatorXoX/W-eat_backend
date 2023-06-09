@@ -5,7 +5,9 @@ import HttpError from "../model/http-error";
 import {
   findAllUsers,
   findAndUpdateUser,
+  findOrderByUser,
   findUserByIdForClient,
+  findUserFavourites,
 } from "../service/user.service";
 
 import { FindUserByIdInput, UpdateUserInput } from "../schema/user.schema";
@@ -38,6 +40,38 @@ export async function findUserByIdForClientHandler(
   }
 
   res.json(user);
+}
+
+export async function findOrdersByUserHandler(
+  req: Request<FindUserByIdInput, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+
+  const userWithOrders = await findOrderByUser(id!);
+
+  if (!userWithOrders) {
+    return next(new HttpError("User not found", 404));
+  }
+
+  res.json(userWithOrders.orders);
+}
+
+export async function findUserFavouritesHandler(
+  req: Request<FindUserByIdInput, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const { id } = req.params;
+
+  const userWithFavourites = await findUserFavourites(id!);
+
+  if (!userWithFavourites) {
+    return next(new HttpError("User not found", 404));
+  }
+
+  res.json(userWithFavourites.favouriteOrders);
 }
 
 // Update User

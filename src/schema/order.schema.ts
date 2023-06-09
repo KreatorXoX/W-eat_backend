@@ -96,6 +96,7 @@ export const updateOrderSchema = z.object({
   body: z.object({
     status: z.nativeEnum(Status).optional(),
     paymentStatus: z.nativeEnum(PaymentStatus).optional(),
+    isFavorite: z.boolean().optional(),
   }),
 });
 export type UpdateOrderInput = z.TypeOf<typeof updateOrderSchema>;

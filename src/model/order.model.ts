@@ -1,10 +1,17 @@
-import { prop, modelOptions, Severity, Ref, pre } from "@typegoose/typegoose";
+import {
+  prop,
+  modelOptions,
+  Severity,
+  Ref,
+  pre,
+  post,
+} from "@typegoose/typegoose";
 
 import { User } from "./user.model";
 import { Product } from "./product.model";
 import { ExtraItem } from "./extraItem.model";
 
-import { ProductModel, ExtraItemModel } from ".";
+import { ProductModel, ExtraItemModel, UserModel, OrderModel } from ".";
 
 export enum Status {
   PENDING = "pending",
@@ -43,12 +50,11 @@ class OrderItem {
 @pre<Order>("save", async function () {
   if (this.isModified("orderItems")) {
     let calculatedTotalPrice = 0;
-
     for (let orderItem of this.orderItems) {
       const product = await ProductModel.findById(orderItem.product._id).exec();
       const extras = await ExtraItemModel.find({
         _id: { $in: orderItem.extras },
-      });
+      }).exec();
 
       for (let extra of extras) {
         calculatedTotalPrice += extra.price;
@@ -65,7 +71,14 @@ class OrderItem {
 
     this.totalPrice = calculatedTotalPrice;
     this.deliveryCost = 5;
-    return;
+  }
+
+  if (this.isModified("user")) {
+    const user = await UserModel.findById(this.user._id).exec();
+    if (user) {
+      user.orders?.push(this._id);
+      await user.save();
+    }
   }
 })
 @modelOptions({
