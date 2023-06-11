@@ -67,7 +67,7 @@ export function findAllExtras() {
 }
 
 export function findExtraById(id: mongoose.Types.ObjectId) {
-  return ExtraModel.findById(id).lean().exec();
+  return ExtraModel.findById(id).lean().populate("extraItems").exec();
 }
 
 export function createExtra(input: Partial<Extra>) {
