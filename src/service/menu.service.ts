@@ -38,11 +38,11 @@ export function deleteCategory(id: mongoose.Types.ObjectId) {
 
 // Products
 export function findAllProducts() {
-  return ProductModel.find().lean();
+  return ProductModel.find().populate("category").lean();
 }
 
 export function findProductById(id: mongoose.Types.ObjectId) {
-  return ProductModel.findById(id).lean().exec();
+  return ProductModel.findById(id).populate("category").lean().exec();
 }
 
 export function createProduct(input: Partial<Product>) {
