@@ -23,6 +23,7 @@ import {
   deleteExtra,
   updateExtraItem,
   deleteExtraItem,
+  findProductByIdNoPopulate,
 } from "../service/menu.service";
 
 import { ByIdInput } from "../schema/global.schema";
@@ -37,6 +38,9 @@ import {
   UpdateProductInput,
 } from "../schema/menu.schema";
 import { findRestaurant } from "../service/restaurant.service";
+import { ObjectId } from "mongoose";
+import { mongoose } from "@typegoose/typegoose";
+import { findUserById } from "../service/user.service";
 
 // Menu
 export async function getMenuHandler(
@@ -123,11 +127,56 @@ export async function updateCategoryHandler(
     { _id: id },
     {
       ...body,
-    }
+    },
+    { new: false }
   );
 
   if (!category) {
     return next(new HttpError(message, 404));
+  }
+
+  const newProductIds = body.products?.map((prod) => String(prod));
+  const oldProductIds = category.products?.map((prod) => prod._id.toString());
+
+  // @pre or @post findOneAndUpdate middleware doesnt return the updated document
+  // so instead of dealing with them in middleware we push the category id to products
+  // in the controller
+  // do the same for the update product!
+  if (newProductIds && newProductIds.length > 0) {
+    const newestProductIds = newProductIds.filter(
+      (prod) => !oldProductIds?.includes(prod)
+    );
+
+    for (let prodId of newestProductIds) {
+      const product = await findProductByIdNoPopulate(
+        new mongoose.Types.ObjectId(prodId)
+      );
+      if (product) {
+        if (product.category) {
+          const result = await updateCategory(
+            { _id: product.category },
+            { $pull: { products: product._id } }
+          );
+        }
+        await updateProduct({ _id: product._id }, { category: id });
+      }
+    }
+  }
+
+  if (oldProductIds && oldProductIds.length > 0) {
+    const removedProductIds = oldProductIds.filter(
+      (prod) => !newProductIds?.includes(prod)
+    );
+
+    for (let prodId of removedProductIds) {
+      const product = await findProductByIdNoPopulate(
+        new mongoose.Types.ObjectId(prodId)
+      );
+      if (product) {
+        product!.category = undefined;
+        await product.save();
+      }
+    }
   }
 
   res.json(category);
@@ -212,11 +261,25 @@ export async function updateProductHandler(
     { _id: id },
     {
       ...body,
+    },
+    {
+      new: true,
     }
   );
 
   if (!product) {
     return next(new HttpError(message, 404));
+  }
+
+  // @pre or @post findOneAndUpdate middleware doesnt return the updated document
+  // so instead of dealing with them in middleware we push the category id to products
+  // in the controller
+  if (product?.category && product.category._id) {
+    console.log("has cat id");
+    await updateCategory(
+      { _id: product.category._id },
+      { $push: { products: product._id } }
+    );
   }
 
   res.json(product);

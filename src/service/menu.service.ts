@@ -17,7 +17,7 @@ export function findAllCategories() {
 }
 
 export function findCategoryById(id: mongoose.Types.ObjectId) {
-  return CategoryModel.findById(id).lean().exec();
+  return CategoryModel.findById(id).populate("products extras").lean().exec();
 }
 
 export function createCategory(input: Partial<Category>) {
@@ -43,6 +43,9 @@ export function findAllProducts() {
 
 export function findProductById(id: mongoose.Types.ObjectId) {
   return ProductModel.findById(id).populate("category").lean().exec();
+}
+export function findProductByIdNoPopulate(id: mongoose.Types.ObjectId) {
+  return ProductModel.findById(id).exec();
 }
 
 export function createProduct(input: Partial<Product>) {

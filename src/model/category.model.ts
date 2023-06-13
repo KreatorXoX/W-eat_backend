@@ -1,9 +1,26 @@
-import { prop, modelOptions, Severity, Ref, pre } from "@typegoose/typegoose";
+import {
+  prop,
+  modelOptions,
+  Severity,
+  Ref,
+  pre,
+  post,
+} from "@typegoose/typegoose";
 
 import { Product } from "./product.model";
 import { Extra } from "./extra.model";
-import { ProductModel } from ".";
+import { CategoryModel, ProductModel } from ".";
 
+@post<Category>("findOneAndRemove", async function (category) {
+  try {
+    await ProductModel.updateMany(
+      { $in: { _id: category.products } },
+      { $pull: { category: category._id } }
+    );
+  } catch (error) {
+    console.log("error in @post remove product");
+  }
+})
 @pre<Category>("save", async function () {
   if (this.isModified("products")) {
     try {

@@ -114,7 +114,6 @@ export const newProductSchema = z.object({
       .min(10, "Must be 10 or more characters long"),
     allergens: z
       .string()
-      .nonempty({ message: "Allergens cannot be empty string" })
       .transform((allergens, ctx) => {
         const allergensArray = allergens.split(",");
         if (!allergensArray) {
@@ -129,10 +128,7 @@ export const newProductSchema = z.object({
       })
       .optional(),
 
-    tag: z
-      .string()
-      .nonempty({ message: "Product name cannot be empty string" })
-      .optional(),
+    tag: z.string().optional(),
     sizes: z.array(z.object({ size: z.string(), price: z.number() })),
     category: z
       .string()
@@ -187,12 +183,9 @@ export const updateProductSchema = z.object({
       .optional(),
     allergens: z
       .string()
-      .nonempty({ message: "Allergen cannot be empty string" })
+
       .optional(),
-    tag: z
-      .string()
-      .nonempty({ message: "Tag cannot be empty string" })
-      .optional(),
+    tag: z.string().optional(),
     sizes: z
       .array(z.object({ size: z.string(), price: z.number() }))
       .optional(),
@@ -290,7 +283,7 @@ export const newExtraItemSchema = z.object({
     price: z.number().min(0).optional(),
     allergens: z
       .string()
-      .nonempty({ message: "Allergens cannot be empty string" })
+
       .transform((allergens, ctx) => {
         const allergensArray = allergens.split(",");
         if (!allergensArray) {
@@ -334,7 +327,7 @@ export const updateExtraItemSchema = z.object({
     price: z.number().min(0).optional(),
     allergens: z
       .string()
-      .nonempty({ message: "Allergens cannot be empty string" })
+
       .transform((allergens, ctx) => {
         const allergensArray = allergens.split(",");
         if (!allergensArray) {
