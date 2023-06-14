@@ -18,19 +18,6 @@ export class Size {
   price!: number;
 }
 
-@pre<Product>("save", async function () {
-  if (this.isModified("category")) {
-    try {
-      const category = await CategoryModel.findById(this.category);
-      if (!category?.products?.includes(this._id)) {
-        category?.products?.push(this._id);
-        await category?.save();
-      }
-    } catch (error) {
-      console.log("error in @pre save product");
-    }
-  }
-})
 @post<Product>("findOneAndRemove", async function (product) {
   try {
     await CategoryModel.findByIdAndUpdate(

@@ -33,14 +33,18 @@ export function updateCategory(
 }
 
 export function deleteCategory(id: mongoose.Types.ObjectId) {
-  return CategoryModel.findByIdAndDelete(id).exec();
+  return CategoryModel.findOneAndRemove({ _id: id }).exec();
 }
 
 // Products
 export function findAllProducts() {
   return ProductModel.find().populate("category").lean();
 }
-
+export function findUncategorizedProducts() {
+  return ProductModel.find({
+    $or: [{ category: { $exists: false } }, { category: null }],
+  }).lean();
+}
 export function findProductById(id: mongoose.Types.ObjectId) {
   return ProductModel.findById(id).populate("category").lean().exec();
 }

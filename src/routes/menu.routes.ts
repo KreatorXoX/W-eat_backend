@@ -18,6 +18,7 @@ import {
   findExtraByIdHandler,
   findExtraItemByIdHandler,
   findProductByIdHandler,
+  findUncategorizedProductsHandler,
   getMenuHandler,
   newCategoryHandler,
   newExtraHandler,
@@ -47,6 +48,10 @@ router.get("api/menu", asyncHandler(getMenuHandler));
 
 router.get("/api/menu/category", asyncHandler(findAllCategoriesHandler));
 router.get("/api/menu/product", asyncHandler(findAllProductsHandler));
+router.get(
+  "/api/menu/products-without-category",
+  asyncHandler(findUncategorizedProductsHandler)
+);
 router.get("/api/menu/extra", asyncHandler(findAllExtrasHandler));
 router.get("/api/menu/extraItem", asyncHandler(findAllExtraItemsHandler));
 

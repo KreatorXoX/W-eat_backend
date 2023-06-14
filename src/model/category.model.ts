@@ -9,13 +9,13 @@ import {
 
 import { Product } from "./product.model";
 import { Extra } from "./extra.model";
-import { CategoryModel, ProductModel } from ".";
+import { ProductModel } from ".";
 
 @post<Category>("findOneAndRemove", async function (category) {
   try {
-    await ProductModel.updateMany(
-      { $in: { _id: category.products } },
-      { $pull: { category: category._id } }
+    const updated = await ProductModel.updateMany(
+      { _id: { $in: category.products } },
+      { category: null }
     );
   } catch (error) {
     console.log("error in @post remove product");

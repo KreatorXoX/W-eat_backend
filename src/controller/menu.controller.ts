@@ -24,6 +24,7 @@ import {
   updateExtraItem,
   deleteExtraItem,
   findProductByIdNoPopulate,
+  findUncategorizedProducts,
 } from "../service/menu.service";
 
 import { ByIdInput } from "../schema/global.schema";
@@ -38,9 +39,7 @@ import {
   UpdateProductInput,
 } from "../schema/menu.schema";
 import { findRestaurant } from "../service/restaurant.service";
-import { ObjectId } from "mongoose";
 import { mongoose } from "@typegoose/typegoose";
-import { findUserById } from "../service/user.service";
 
 // Menu
 export async function getMenuHandler(
@@ -151,6 +150,7 @@ export async function updateCategoryHandler(
       const product = await findProductByIdNoPopulate(
         new mongoose.Types.ObjectId(prodId)
       );
+
       if (product) {
         if (product.category) {
           const result = await updateCategory(
@@ -158,7 +158,9 @@ export async function updateCategoryHandler(
             { $pull: { products: product._id } }
           );
         }
-        await updateProduct({ _id: product._id }, { category: id });
+        product.category = category;
+        await product.save();
+        // await updateProduct({ _id: product._id }, { category: id });
       }
     }
   }
@@ -215,6 +217,20 @@ export async function findAllProductsHandler(
   res.json(products);
 }
 
+export async function findUncategorizedProductsHandler(
+  req: Request<{}, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const products = await findUncategorizedProducts();
+
+  if (!products || products?.length < 1) {
+    return next(new HttpError("No uncategorized product is found", 404));
+  }
+
+  res.json(products);
+}
+
 export async function findProductByIdHandler(
   req: Request<ByIdInput, {}, {}>,
   res: Response,
@@ -263,7 +279,7 @@ export async function updateProductHandler(
       ...body,
     },
     {
-      new: true,
+      new: false,
     }
   );
 
@@ -271,14 +287,19 @@ export async function updateProductHandler(
     return next(new HttpError(message, 404));
   }
 
+  const oldCategory = product.category?.toString();
+  const newCategory = body.category;
   // @pre or @post findOneAndUpdate middleware doesnt return the updated document
   // so instead of dealing with them in middleware we push the category id to products
   // in the controller
-  if (product?.category && product.category._id) {
-    console.log("has cat id");
+  if (oldCategory !== newCategory) {
     await updateCategory(
-      { _id: product.category._id },
+      { _id: newCategory },
       { $push: { products: product._id } }
+    );
+    await updateCategory(
+      { _id: oldCategory },
+      { $pull: { products: product._id } }
     );
   }
 
