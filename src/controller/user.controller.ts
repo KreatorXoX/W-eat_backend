@@ -3,6 +3,7 @@ import { Response, Request, NextFunction } from "express";
 import HttpError from "../model/http-error";
 
 import {
+  deleteUser,
   findAllUsers,
   findAndUpdateUser,
   findOrderByUser,
@@ -11,6 +12,7 @@ import {
 
 import { FindUserByIdInput, UpdateUserInput } from "../schema/user.schema";
 import { isDocument } from "@typegoose/typegoose";
+import { ByIdInput } from "../schema/global.schema";
 
 export async function findAllUsersHandler(
   req: Request<{}, {}, {}>,
@@ -82,6 +84,48 @@ export async function updateUserHandler(
       ...body,
     }
   );
+
+  if (!user) {
+    return next(new HttpError(message, 404));
+  }
+
+  res.json({ id: user._id });
+}
+
+// Update User Status
+export async function updateUserStatusHandler(
+  req: Request<ByIdInput, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const message = "Error updating User";
+  const suspend = (req.query.suspend as string) === "true";
+  const { id } = req.params;
+
+  const user = await findAndUpdateUser(
+    { _id: id },
+    {
+      isSuspended: suspend,
+    }
+  );
+
+  if (!user) {
+    return next(new HttpError(message, 404));
+  }
+
+  res.json(user);
+}
+
+// Delete User
+export async function deleteUserHandler(
+  req: Request<ByIdInput, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const message = "Error deleting User";
+  const { id } = req.params;
+
+  const user = await deleteUser(id!);
 
   if (!user) {
     return next(new HttpError(message, 404));

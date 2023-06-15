@@ -24,7 +24,7 @@ export async function findRestaurantHandler(
     return next(new HttpError("No restaurant is available", 404));
   }
 
-  res.json({ restaurant: restaurant[0] });
+  res.json(restaurant[0]);
 }
 
 export async function newRestaurantHandler(

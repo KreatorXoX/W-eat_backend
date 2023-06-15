@@ -9,7 +9,7 @@ export const newRestaurantSchema = z.object({
     email: z.string().nonempty().optional(),
     backgroundImage: z.string().nonempty().optional(),
     minDeliveryAmount: z.number().min(1),
-    averageDeliveryTime: z.number().min(1),
+    averageDeliveryTime: z.string().nonempty(),
     deliveryCost: z.number().min(1),
     operationTime: z.object({
       openingTime: z.string().nonempty(),
@@ -58,7 +58,7 @@ export const updateRestaurantSchema = z.object({
     email: z.string().nonempty().optional(),
     backgroundImage: z.string().nonempty().optional(),
     minDeliveryAmount: z.number().min(1).optional(),
-    averageDeliveryTime: z.number().min(1).optional(),
+    averageDeliveryTime: z.string(),
     deliveryCost: z.number().min(1).optional(),
     operationTime: z
       .object({

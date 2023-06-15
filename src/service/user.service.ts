@@ -7,7 +7,8 @@ import { UserModel } from "../model";
 // for client
 
 export function findAllUsers() {
-  return UserModel.find().select("_id").lean().exec();
+  return UserModel.find().select("_id email name isSuspended").lean().exec();
+  //return UserModel.find().select("_id").lean().exec();
 }
 export function findUserByIdForClient(id: mongoose.Types.ObjectId) {
   return UserModel.findById(id)
@@ -52,4 +53,8 @@ export function findAndUpdateUser(
   options: QueryOptions = {}
 ) {
   return UserModel.findOneAndUpdate(query, update, options);
+}
+
+export function deleteUser(id: mongoose.Types.ObjectId) {
+  return UserModel.findByIdAndDelete(id).exec();
 }

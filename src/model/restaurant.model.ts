@@ -23,14 +23,17 @@ export class Restaurant {
   @prop({ type: String, trim: true, lowercase: true })
   email?: string;
 
+  @prop({ type: String })
+  phoneNumber?: string;
+
   @prop({ type: String, default: "some url" })
   backgroundImage?: string;
 
   @prop({ type: Number, required: true })
   minDeliveryAmount: number;
 
-  @prop({ type: Number, required: true })
-  averageDeliveryTime: number;
+  @prop({ type: String, required: true })
+  averageDeliveryTime: string;
 
   @prop({ type: Number, required: true })
   deliveryCost: number;
