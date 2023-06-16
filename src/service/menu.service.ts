@@ -13,7 +13,7 @@ import { ExtraItem } from "../model/extraItem.model";
 
 // Categories
 export function findAllCategories() {
-  return CategoryModel.find().lean();
+  return CategoryModel.find().populate("products extras").lean().exec();
 }
 
 export function findCategoryById(id: mongoose.Types.ObjectId) {

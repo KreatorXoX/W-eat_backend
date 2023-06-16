@@ -17,6 +17,7 @@ import { byIdSchema } from "../schema/global.schema";
 const router = express.Router();
 
 router.get("/api/orders", asyncHandler(findOrdersHandler));
+
 router.get(
   "/api/orders/:id",
   validateSchema(byIdSchema),

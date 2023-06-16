@@ -8,6 +8,7 @@ import {
   deleteOrder,
   findOrderById,
   findOrders,
+  findPaginatedOrders,
   updateOrder,
 } from "../service/order.service";
 import { ExtraItemModel } from "../model";
@@ -23,6 +24,24 @@ export async function findOrdersHandler(
   res: Response,
   next: NextFunction
 ) {
+  const page = req.query.page;
+
+  if (page) {
+    const pageNum = parseInt(page as string);
+    // sending only 8 orders at a time
+    const limit = 8;
+    const skipIndex = (pageNum - 1) * 8;
+
+    const paginatedOrders = await findPaginatedOrders(limit, skipIndex);
+
+    if (!paginatedOrders) {
+      return next(new HttpError("Orders not found", 404));
+    }
+
+    res.json(paginatedOrders);
+    return;
+  }
+
   const orders = await findOrders();
 
   if (!orders) {

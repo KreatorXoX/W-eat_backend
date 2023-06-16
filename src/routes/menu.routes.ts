@@ -44,7 +44,7 @@ const router = express.Router();
 
 // GET
 
-router.get("api/menu", asyncHandler(getMenuHandler));
+router.get("/api/menu", asyncHandler(getMenuHandler));
 
 router.get("/api/menu/category", asyncHandler(findAllCategoriesHandler));
 router.get("/api/menu/product", asyncHandler(findAllProductsHandler));

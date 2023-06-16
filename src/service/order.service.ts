@@ -4,11 +4,30 @@ import { OrderModel } from "../model";
 import { Order } from "../model/order.model";
 
 export function findOrders() {
-  return OrderModel.find();
+  return OrderModel.find().populate("orderItems");
+}
+
+export function findPaginatedOrders(limit: number, skip: number) {
+  return OrderModel.find()
+    .sort({ _id: -1 })
+    .limit(limit)
+    .skip(skip)
+    .populate({
+      path: "orderItems",
+      populate: "product extras",
+      select: "product extras quantity size note",
+    })
+    .exec();
 }
 
 export function findOrderById(id: mongoose.Types.ObjectId) {
-  return OrderModel.findById(id).exec();
+  return OrderModel.findById(id)
+    .populate({
+      path: "orderItems",
+      populate: "product extras",
+      select: "product extras quantity size note",
+    })
+    .exec();
 }
 
 export function createOrder(input: Partial<Order>) {
