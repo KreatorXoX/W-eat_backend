@@ -46,7 +46,16 @@ export function findUncategorizedProducts() {
   }).lean();
 }
 export function findProductById(id: mongoose.Types.ObjectId) {
-  return ProductModel.findById(id).populate("category").lean().exec();
+  return ProductModel.findById(id)
+    .populate({
+      path: "category",
+      populate: {
+        path: "extras",
+        populate: "extraItems",
+      },
+    })
+    .lean()
+    .exec();
 }
 export function findProductByIdNoPopulate(id: mongoose.Types.ObjectId) {
   return ProductModel.findById(id).exec();
