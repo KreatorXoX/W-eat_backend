@@ -102,6 +102,9 @@ export class Order {
   @prop({ type: String, required: true })
   email: string;
 
+  @prop({ type: String })
+  note?: string;
+
   @prop({ type: String, required: true })
   phoneNumber: string;
 

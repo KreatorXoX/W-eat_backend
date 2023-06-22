@@ -108,17 +108,17 @@ export const loginUserHandler = async (
       },
     },
     "accessTokenSecret",
-    { expiresIn: "25s" }
+    { expiresIn: "30m" }
   );
   const refreshToken = signJwt({ _id: user._id }, "refreshTokenSecret", {
-    expiresIn: "2m",
+    expiresIn: "24h",
   });
 
   res.cookie("myRefreshTokenCookie", refreshToken, {
     httpOnly: true,
     secure: true, // make it true when prod.
     sameSite: "none",
-    maxAge: 2 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000,
   });
 
   res.json({ accessToken });
@@ -157,7 +157,7 @@ export const refreshUserHandler = async (
       },
     },
     "accessTokenSecret",
-    { expiresIn: "25s" }
+    { expiresIn: "30m" }
   );
 
   res.json({ accessToken });
@@ -342,10 +342,10 @@ export const googleOAuthHandler = async (
         },
       },
       "accessTokenSecret",
-      { expiresIn: "25s" }
+      { expiresIn: "30m" }
     );
     const refreshToken = signJwt({ _id: user._id }, "refreshTokenSecret", {
-      expiresIn: "2m",
+      expiresIn: "24h",
     });
 
     res.cookie("myRefreshTokenCookie", refreshToken, {
