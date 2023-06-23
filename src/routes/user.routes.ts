@@ -19,16 +19,18 @@ import { byIdSchema } from "../schema/global.schema";
 
 const router = express.Router();
 
-router.get("/api/users", asyncHandler(findAllUsersHandler));
+router.get("/api/users", verifyAdmin, asyncHandler(findAllUsersHandler));
 
 router.get(
   "/api/user/:id",
+  verifyJWT,
   validateSchema(findUserByIdSchema),
   asyncHandler(findUserByIdForClientHandler)
 );
 
 router.get(
   "/api/user/orders/:id",
+  verifyJWT,
   validateSchema(findUserByIdSchema),
   asyncHandler(findOrdersByUserHandler)
 );
@@ -36,12 +38,14 @@ router.get(
 // PATCH
 router.patch(
   "/api/user/suspend/:id",
+  verifyAdmin,
   validateSchema(byIdSchema),
   asyncHandler(updateUserStatusHandler)
 );
 
 router.patch(
   "/api/user/:id",
+  verifyJWT,
   validateSchema(updateUserSchema),
   asyncHandler(updateUserHandler)
 );
@@ -49,6 +53,7 @@ router.patch(
 // DELETE
 router.delete(
   "/api/user/:id",
+  verifyAdmin,
   validateSchema(byIdSchema),
   asyncHandler(deleteUserHandler)
 );
