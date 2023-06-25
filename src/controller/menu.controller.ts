@@ -48,15 +48,7 @@ export async function getMenuHandler(
   next: NextFunction
 ) {
   const categories = await findAllCategories();
-
-  if (!categories || categories?.length < 1) {
-    return next(new HttpError("No category is found", 404));
-  }
-
   const restaurant = await findRestaurant();
-  if (!restaurant || restaurant?.length < 1) {
-    return next(new HttpError("No restaurant is found", 404));
-  }
   const restaurantRating = await restaurant[0].calculateRating();
 
   res.json({

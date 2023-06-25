@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import validateSchema from "../middleware/validateSchema";
 import {
   findRestaurantHandler,
+  getRestaurantRevenueHandler,
   newRestaurantHandler,
   updateRestaurantHandler,
 } from "../controller/restaurant.controller";
@@ -15,6 +16,7 @@ import {
 const router = express.Router();
 
 router.get("/api/restaurant", asyncHandler(findRestaurantHandler));
+router.get("/api/revenue", asyncHandler(getRestaurantRevenueHandler));
 
 router.post(
   "/api/restaurant",

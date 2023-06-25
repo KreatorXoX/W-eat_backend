@@ -27,6 +27,24 @@ export async function findRestaurantHandler(
   res.json(restaurant[0]);
 }
 
+export async function getRestaurantRevenueHandler(
+  req: Request<{}, {}, {}>,
+  res: Response,
+  next: NextFunction
+) {
+  const restaurant = await findRestaurant();
+
+  if (!restaurant || restaurant.length < 1) {
+    return next(new HttpError("No restaurant nor revenue is available", 404));
+  }
+
+  const revenue = {
+    ...restaurant[0].getRevenue(),
+  };
+
+  res.json(revenue);
+}
+
 export async function newRestaurantHandler(
   req: Request<{}, {}, NewRestaurantInput>,
   res: Response,

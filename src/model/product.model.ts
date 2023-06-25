@@ -18,6 +18,15 @@ export class Size {
   price!: number;
 }
 
+@pre<Product>("save", async function () {
+  if (this.isModified("category")) {
+    const categoryId = this.category?._id;
+    await CategoryModel.findOneAndUpdate(
+      { _id: categoryId },
+      { $push: { products: this._id } }
+    );
+  }
+})
 @post<Product>("findOneAndRemove", async function (product) {
   try {
     await CategoryModel.findByIdAndUpdate(

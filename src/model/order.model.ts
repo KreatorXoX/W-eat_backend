@@ -70,7 +70,6 @@ class OrderItem {
     }
 
     this.totalPrice = calculatedTotalPrice;
-    this.deliveryCost = 5;
   }
 
   if (this.isModified("user")) {
