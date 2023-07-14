@@ -1,7 +1,15 @@
-import { prop, modelOptions, Severity, Ref } from "@typegoose/typegoose";
+import { prop, modelOptions, Severity, Ref, pre } from "@typegoose/typegoose";
 
 import { User } from "./user.model";
+import { RestaurantModel } from ".";
 
+@pre<Review>("save", async function () {
+  const restaurant = await RestaurantModel.findOne();
+  if (restaurant) {
+    restaurant?.reviews?.push(this._id);
+    await restaurant?.save();
+  }
+})
 @modelOptions({
   schemaOptions: {
     timestamps: true,
