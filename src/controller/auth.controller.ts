@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
-
+import bcrypt from "bcrypt";
 import HttpError from "../model/http-error";
 
 import {
@@ -313,6 +313,7 @@ export const googleOAuthHandler = async (
       return next(new HttpError("Account is not verified", 400));
     }
 
+    const hashedRandomPassword = await bcrypt.hash(uuidv4(), 10);
     const user = await findAndUpdateUser(
       {
         email: decodedUser.email,
@@ -323,6 +324,7 @@ export const googleOAuthHandler = async (
           decodedUser.given_name + decodedUser.family_name || decodedUser.name,
         verified: true,
         isAdmin: false,
+        password: hashedRandomPassword,
       },
       {
         upsert: true,

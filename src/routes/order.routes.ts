@@ -2,8 +2,7 @@ import express from "express";
 import asyncHandler from "express-async-handler";
 
 import validateSchema from "../middleware/validateSchema";
-import verifyJWT from "../middleware/verifyJWT";
-import verifyAdmin from "../middleware/verifyAdmin";
+
 import {
   deleteOrderHandler,
   findOrderByIdHandler,
