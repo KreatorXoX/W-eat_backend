@@ -76,21 +76,28 @@ export class Restaurant {
   async getRevenue() {
     try {
       const orders = await findOrders();
+
       const total = orders.reduce((prev, current) => {
         if (current.status === "delivered") {
           return prev + (current.totalPrice || 0);
         }
         return prev;
       }, 0);
-
-      return {
+      console.log(orders);
+      const reveue = {
         totalOrders: orders.length,
         totalEarned: total,
-        ordersCompleted: orders.map((order) => order.status === "delivered")
+        ordersCompleted: orders.filter((order) => order.status === "delivered")
           .length,
-        ordersCanceled: orders.map((order) => order.status === "canceled")
+        ordersActive: orders.filter((order) => order.status === "accepted")
+          .length,
+        ordersCanceled: orders.filter((order) => order.status === "canceled")
+          .length,
+        ordersPending: orders.filter((order) => order.status === "pending")
           .length,
       };
+
+      return reveue;
     } catch (error) {
       console.log("revenue calc error");
       return 0;

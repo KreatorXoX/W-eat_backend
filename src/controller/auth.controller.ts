@@ -175,7 +175,7 @@ export const logoutUserHandler = (req: Request, res: Response) => {
     httpOnly: true,
     secure: true, // make it true when prod.
     sameSite: "none",
-    maxAge: 2 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000,
   });
 
   res.json({ message: "Cookies cleared" });
@@ -321,7 +321,8 @@ export const googleOAuthHandler = async (
       {
         email: decodedUser.email,
         name:
-          decodedUser.given_name + decodedUser.family_name || decodedUser.name,
+          decodedUser.given_name + " " + decodedUser.family_name ||
+          decodedUser.name,
         verified: true,
         isAdmin: false,
         password: hashedRandomPassword,
@@ -354,7 +355,7 @@ export const googleOAuthHandler = async (
       httpOnly: true,
       secure: true, // make it true when prod.
       sameSite: "none",
-      maxAge: 2 * 60 * 1000,
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     res.redirect(

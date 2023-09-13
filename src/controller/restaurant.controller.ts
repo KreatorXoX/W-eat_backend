@@ -39,9 +39,8 @@ export async function getRestaurantRevenueHandler(
   }
 
   const revenue = {
-    ...restaurant[0].getRevenue(),
+    ...(await restaurant[0].getRevenue()),
   };
-
   res.json(revenue);
 }
 
